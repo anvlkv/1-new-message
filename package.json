@@ -1,31 +1,46 @@
 {
-	"name": "async",
-	"displayName": "async",
-	"description": "test async",
+	"name": "one_new_message",
+	"displayName": "one new message",
+	"description": "rigorous git routine. try to keep it mindful ;-)",
 	"version": "0.0.1",
-	"publisher": "eg2",
+	"publisher": "a.nvlkv<a.nvlkv@protonmail.ch>",
 	"engines": {
-		"vscode": "^0.10.1"
+		"vscode": "^1.22.0"
 	},
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.showAllLanguages"
+		"workspaceContains:.git/"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
-		"commands": [{
-			"command": "extension.showAllLanguages",
-			"title": "Hello World"
-		}]
+		"commands": [
+			{
+				"command": "git-routines:init",
+				"title": "init git routines"
+			},
+			{
+				"command": "git-routines:reg",
+				"title": "register git routines listener"
+			},
+			{
+				"command": "git-routines:cancel",
+				"title": "register git routines listener"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./"
 	},
 	"devDependencies": {
-		"typescript": "^1.6.2",
-		"vscode": "0.10.x"
+		"@types/vscode":"^1.14.0",
+		"@types/mocha": "5.2.7",
+		"typescript": "^3.4.3",
+		"vscode-test": "^1.4.0"
+	},
+	"dependencies": {
 	}
 }
