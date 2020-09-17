@@ -6,7 +6,7 @@
 	"publisher": "anvlkv",
 	"author": "a.nvlkv<a.nvlkv@protonmail.ch>",
 	"repository": "https://github.com/anvlkv/1-new-message",
-	"icon": "https://github.com/anvlkv/1-new-message/raw/master/icon.png",
+	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.49.0"
 	},
