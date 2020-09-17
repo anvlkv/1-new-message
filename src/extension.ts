@@ -3,7 +3,7 @@ import { Extension } from "vscode";
 import { API, Change, GitExtension, Repository, RepositoryState } from "../typings/git";
 // import * as Git from "nodegit";
 
-const EXT_ID = 'git-routines';
+const EXT_ID = '1nm';
 const CMD_INIT = `${EXT_ID}:init`;
 const CMD_ITER = `${EXT_ID}:iter`;
 const INITIAL_MESSAGE_ID = `${EXT_ID}:initial_message`;

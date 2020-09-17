@@ -17,15 +17,15 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "git-routines:init",
+				"command": "1nm:init",
 				"title": "init git routines"
 			},
 			{
-				"command": "git-routines:reg",
+				"command": "1nm:reg",
 				"title": "register git routines listener"
 			},
 			{
-				"command": "git-routines:cancel",
+				"command": "1nm:cancel",
 				"title": "register git routines listener"
 			}
 		]
