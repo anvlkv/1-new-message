@@ -1,11 +1,13 @@
 {
-	"name": "one_new_message",
+	"name": "one-new-message",
 	"displayName": "one new message",
 	"description": "rigorous git routine. try to keep it mindful ;-)",
 	"version": "0.0.1",
-	"publisher": "a.nvlkv<a.nvlkv@protonmail.ch>",
+	"publisher": "anvlkv",
+	"author": "a.nvlkv<a.nvlkv@protonmail.ch>",
+	"repository": "https://github.com/anvlkv/1-new-message",
 	"engines": {
-		"vscode": "^1.22.0"
+		"vscode": "^1.49.0"
 	},
 	"categories": [
 		"Other"
@@ -31,16 +33,16 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+		"vscode:prepublish": "tsc -p ./",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./"
 	},
 	"devDependencies": {
-		"@types/vscode":"^1.14.0",
 		"@types/mocha": "5.2.7",
+		"@types/node": "^14.11.1",
+		"@types/vscode": "^1.14.0",
 		"typescript": "^3.4.3",
 		"vscode-test": "^1.4.0"
 	},
-	"dependencies": {
-	}
+	"dependencies": {}
 }
