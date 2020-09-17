@@ -1,10 +1,10 @@
 # one new message
 
-every time u save a file you've got one new message to write ;-)
+Prompts user for a new commit message on file change. 
 
-## workflow
+Persisted message can be applied to other changes or modified.
 
-Prompts user for commit message on change detection. Persisted message can be applied to other changes or modified.
+Keeps track of messages per file.
 
 ### Stay mindful
 
