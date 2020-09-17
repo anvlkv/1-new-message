@@ -120,7 +120,7 @@ export async function activate(context: vscode.ExtensionContext) {
                             iteration_message : await vscode.window.showInputBox({
                                 prompt: `What's going to change?`,
                                 placeHolder: 'New commit message',
-                                value: iteration_message
+                                value: `${iteration_changes.length} new message${iteration_changes.length > 1 ? 's' :''}`
                             });
                         }
 
