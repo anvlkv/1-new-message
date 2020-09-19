@@ -25,8 +25,6 @@ export async function activate(context: vscode.ExtensionContext) {
             let initialized = {};
 
             const init_workflow = async (repo: Repository) => {
-                const status = await repo.status();
-
                 let ready_to_go = repo.state.workingTreeChanges.length === 0;
 
                 if (!ready_to_go) {
@@ -42,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
                             placeHolder: 'Initial commit message'
                         });
 
-                    if (initial_commit_message && !repo.inputBox.value) {
+                    if (initial_commit_message) {
                         repo.inputBox.value = initial_commit_message;
                         context.workspaceState.update(INITIAL_MESSAGE_ID, initial_commit_message);
                     }
@@ -60,8 +58,6 @@ export async function activate(context: vscode.ExtensionContext) {
                     api.repositories.forEach(async (repo) => {
                         if (initialized[repo.rootUri.toString()]) {
                             if (repo.state.workingTreeChanges.length > 0) {
-                                console.log(repo.state.workingTreeChanges);
-                                console.log(change.document);
                                 start_routine(repo, change.document);
                             }
                             else {
@@ -75,12 +71,30 @@ export async function activate(context: vscode.ExtensionContext) {
                         }
                     });
                 }
-                
+            }
+
+            const on_save_document = (doc: vscode.TextDocument) => {
+                api.repositories.forEach(async (repo) => {
+                    if (initialized[repo.rootUri.toString()]) {
+                        if (repo.state.workingTreeChanges.length > 0) {
+                            start_routine(repo, doc);
+                        }
+                        else {
+                            revert_routine(repo);
+                        }
+                    }
+                    else {
+                        api.repositories.forEach(async (repo) => {
+                            init_workflow(repo);
+                        })
+                    }
+                });
             }
 
             const on_open_repository = async (repo: Repository) => {
                 await init_workflow(repo);
                 context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(on_change_document));
+                context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(on_save_document));
             }
 
 
@@ -90,6 +104,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 }
 
                 let wt_change: Change;
+                
                 if (doc) {
                     wt_change = repo.state.workingTreeChanges.find(ch => ch.uri.toString() === doc.uri.toString());
 
@@ -110,18 +125,25 @@ export async function activate(context: vscode.ExtensionContext) {
                     from_input = true;
                 }
 
-                
+
 
                 if (wt_change) {
                     const iteration_changes = context.workspaceState.get<vscode.Uri[]>(ITERATION_INDEX_ID_TEMPLATE(repo.rootUri.toString()), []);
                     if (!iteration_changes.find(uri => wt_change.uri.toString() === uri.toString())) {
                         if (!from_input) {
-                            iteration_message = (await vscode.window.showQuickPick([{label: 'Yes', description: `Yes, continue with [${iteration_message}]`, default: true, value: true}, {label:'No', description: `No, enter new message`, value: false}])).value ?
-                            iteration_message : await vscode.window.showInputBox({
-                                prompt: `What's going to change?`,
-                                placeHolder: 'New commit message',
-                                value: `${iteration_changes.length} new message${iteration_changes.length > 1 ? 's' :''}`
-                            });
+                            const isSameMessage = await vscode.window.showQuickPick([{ label: 'Yes', description: `Yes, continue with [${iteration_message}]`, default: true, value: true }, { label: 'No', description: `No, enter new message`, value: false }]);
+
+                            if (isSameMessage && !isSameMessage.value) {
+                                const updated_iteration_message = await vscode.window.showInputBox({
+                                    prompt: `What's going to change?`,
+                                    placeHolder: 'New commit message',
+                                    value: `${iteration_changes.length} new message${iteration_changes.length > 1 ? 's' : ''}`
+                                });
+
+                                if (updated_iteration_message) {
+                                    iteration_message = updated_iteration_message;
+                                }
+                            }
                         }
 
                         if (iteration_message) {
@@ -183,7 +205,6 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     } catch (e) {
         vscode.window.showWarningMessage(`f**k it i quit with ${e}`)
-        console.log('nope', e);
     }
 
 
