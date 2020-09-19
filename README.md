@@ -1,11 +1,11 @@
 # one new message
 
-Prompts user for a new commit message on file change. 
+Prompts user for a new commit message on a file changes
 
-Persisted message can be applied to other changes or modified.
+Persisted message can be applied to other changes or modified
 
-Keeps track of messages per file.
+Keeps track of messages per file
 
-### Stay mindful
+## Stay mindful
 
-### Namaste
+## Namaste
