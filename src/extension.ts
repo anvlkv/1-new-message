@@ -32,9 +32,8 @@ export async function activate(context: vscode.ExtensionContext) {
                 if (!ready_to_go) {
                     const initial_commit_message = context.workspaceState.get<string>(ITERATION_MESSAGE_ID_TEMPLATE(repo.rootUri))
                         || context.workspaceState.get<string>(INITIAL_MESSAGE_ID, null)
-                        || repo.inputBox.value
                         || await vscode.window.showInputBox({
-                            value: "getting started with rigorous git routines",
+                            value: repo.inputBox.value || "getting started with rigorous git routines",
                             prompt: `
                                             Your working tree seems to have [${repo.state.workingTreeChanges.length}] change${repo.state.workingTreeChanges.length > 1 ? 's' : ''}, 
                                             let's add a commit message for ${repo.state.workingTreeChanges.length > 1 ? 'these' : 'this'}
