@@ -73,7 +73,9 @@ export async function activate(context: vscode.ExtensionContext) {
             }
 
             const on_change_document = (change: vscode.TextDocumentChangeEvent) => {
-                with_repos((repo) => start_routine(repo, change.document.uri));
+                if (change.contentChanges.length) {
+                    with_repos((repo) => start_routine(repo, change.document.uri));
+                }
             }
 
             const on_save_document = (doc: vscode.TextDocument) => {
