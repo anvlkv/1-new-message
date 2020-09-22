@@ -122,8 +122,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
                 const iteration_changes = context.workspaceState.get<vscode.Uri[]>(ITERATION_INDEX_ID_TEMPLATE(repo.rootUri.toString()), []);
 
-                let iteration_message = repo.inputBox.value
-                || context.workspaceState.get<string>(ITERATION_MESSAGE_ID_TEMPLATE(repo.rootUri));
+                let iteration_message = context.workspaceState.get<string>(ITERATION_MESSAGE_ID_TEMPLATE(repo.rootUri));
                 let from_input = false;
                 if (!iteration_message 
                     && (!wt_changes 
@@ -131,7 +130,7 @@ export async function activate(context: vscode.ExtensionContext) {
                     iteration_message = await vscode.window.showInputBox({
                         prompt: `What's going to change?`,
                         placeHolder: 'New commit message',
-                        value: NEW_MESSAGE_TEMPLATE(iteration_changes.length || 1)
+                        value: repo.inputBox.value || NEW_MESSAGE_TEMPLATE(iteration_changes.length || 1)
                     });
 
                     from_input = true;
