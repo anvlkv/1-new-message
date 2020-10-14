@@ -143,13 +143,19 @@ export async function activate(context: vscode.ExtensionContext) {
                 if (wt_changes && iteration_message) {
                     if (!wt_changes.every(ch  => iteration_changes.find(uri => ch.uri.toString() === uri.toString()))) {
                         if (!from_input) {
-                            const isSameMessage = await vscode.window.showQuickPick([
-                                { label: 'Yes', description: `Yes, continue with [${iteration_message}]`, default: true, value: true }, 
-                                { label: 'No', description: `No, enter new message`, value: false }
-                            ]);
+                            const quickPick = vscode.window.createQuickPick();
+                            quickPick.items = [
+                                { label: 'Yes', description: `Yes, continue with [${iteration_message}]`}, 
+                                { label: 'No', description: `No, enter new message`},
+                                { label: '$(plus)', description: 'Use entered text as new message', alwaysShow: true}
+                            ];
+                            quickPick.show();
+                            const isSameMessage: vscode.QuickPickItem = await new Promise(c => quickPick.onDidAccept(() => c(quickPick.activeItems[0])));
+                            quickPick.hide();
+                            
+                            if (isSameMessage && isSameMessage.label !== 'Yes') {
 
-                            if (isSameMessage && !isSameMessage.value) {
-                                const updated_iteration_message = await vscode.window.showInputBox({
+                                const updated_iteration_message = isSameMessage.label !== 'No' ? quickPick.value : await vscode.window.showInputBox({
                                     prompt: `What's going to change?`,
                                     placeHolder: 'New commit message',
                                     value: NEW_MESSAGE_TEMPLATE(iteration_changes.length)
