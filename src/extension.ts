@@ -30,7 +30,8 @@ export async function activate(context: vscode.ExtensionContext) {
                 let ready_to_go = repo.state.workingTreeChanges.length === 0;
 
                 if (!ready_to_go) {
-                    const initial_commit_message = context.workspaceState.get<string>(ITERATION_MESSAGE_ID_TEMPLATE(repo.rootUri))
+                    const initial_commit_message = repo.inputBox.value 
+                        || context.workspaceState.get<string>(ITERATION_MESSAGE_ID_TEMPLATE(repo.rootUri))
                         || context.workspaceState.get<string>(INITIAL_MESSAGE_ID, null)
                         || await vscode.window.showInputBox({
                             value: repo.inputBox.value || "getting started with rigorous git routines",
@@ -73,7 +74,7 @@ export async function activate(context: vscode.ExtensionContext) {
             }
 
             const on_change_document = (change: vscode.TextDocumentChangeEvent) => {
-                if (change.contentChanges.length) {
+                if (change.contentChanges.length && !change.document.isDirty && change.document.uri.scheme == 'file') {
                     with_repos((repo) => start_routine(repo, change.document.uri));
                 }
             }
@@ -124,7 +125,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
                 const iteration_changes = context.workspaceState.get<vscode.Uri[]>(ITERATION_INDEX_ID_TEMPLATE(repo.rootUri.toString()), []);
 
-                let iteration_message = context.workspaceState.get<string>(ITERATION_MESSAGE_ID_TEMPLATE(repo.rootUri));
+                let iteration_message = repo.inputBox.value || context.workspaceState.get<string>(ITERATION_MESSAGE_ID_TEMPLATE(repo.rootUri));
                 let from_input = false;
                 if (!iteration_message 
                     && (!wt_changes 
